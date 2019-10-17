@@ -37,6 +37,11 @@ body {
     padding-top: 100px;
 }
 
+#buttonarea{
+    display: grid;
+    grid-gap: 2px;
+}
+
 .rightalign{
     float: right;
     margin-right: 2%;
