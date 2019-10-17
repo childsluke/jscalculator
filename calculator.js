@@ -22,6 +22,7 @@ function populateButtons()
         // Create each new button from 1-9 and put them into a CSS grid
         let newButton = document.createElement("button");
         newButton.id = "button" + i;
+        newButton.classList.add("calculatorButton")
         newButton.textContent = i;
         
         newButton.style.gridColumnStart = currentColumn;
@@ -47,4 +48,7 @@ function populateButtons()
     let buttonZeroDOM = document.getElementById("button0");
     buttonZeroDOM.style.gridColumnStart = 2;
     buttonZeroDOM.style.gridColumnEnd = 3;
+
+
+    // TODO: Create operand and clear buttons
 }

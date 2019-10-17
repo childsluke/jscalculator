@@ -23,23 +23,54 @@ body {
     width: 400px;
     height: 600px;
     border: thick solid black;
+    border-radius: 25px;
 }
 
-#screen {
-    text-align: center;
+#screenarea {
     margin-top: 50px;
+    text-align: center;
 }
 
-#screenInput{
-    font-size: 25px;
+.screen{
     text-align: right;
-    height: 150px;
-    padding-top: 100px;
+    background-color: #a8c64e;
+    margin-left: 43px;
+    margin-right: 41px;
+    margin-bottom: 0px;
+    height: 5px;
+    padding-top: 50px;
+    padding-bottom: 30px;
+    padding-right: 10px;
+}
+
+#screenTop{
+    font-size: 20px;
+    color: #777777;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+}
+
+#screenBottom{
+    font-size: 25px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
 }
 
 #buttonarea{
-    display: grid;
-    grid-gap: 2px;
+    display: inline-grid;
+    margin-top: 40px;
+    margin-left: 40px;
+    row-gap: 1px;
+    column-gap: 1px;
+}
+
+.calculatorButton
+{
+    width: 75px;
+    height: 75px;
+
+    font-size: 30px;
+    background-color: white;
 }
 
 .rightalign{
