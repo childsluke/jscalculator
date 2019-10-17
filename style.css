@@ -15,7 +15,26 @@ body {
 }
 
 #calculatorarea{
-    margin: 1% 1% 1% 1%;
+    
+    margin: -300px 1% 1% -200px;
+    position: absolute;
+    top: 50%; left: 50%;
+    background-color: #999999;
+    width: 400px;
+    height: 600px;
+    border: thick solid black;
+}
+
+#screen {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#screenInput{
+    font-size: 25px;
+    text-align: right;
+    height: 150px;
+    padding-top: 100px;
 }
 
 .rightalign{
