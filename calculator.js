@@ -1,4 +1,11 @@
-let onScreenNumber = 0, cumulativeNumber = 0;
+// JAVASCRIPT CALCULATOR
+// ---------------------
+
+// TODO: Add operand buttons and calculation logic
+// ( +, -, *, /, = )
+
+let onScreenNumberString = "0", cumulativeNumber = "0"; currentEquation= "";
+let buttonAreaDOM = 0; let decimalOnScreen = false;
 
 function init()
 {
@@ -7,8 +14,10 @@ function init()
 
 function clear()
 {
-    onScreenNumber = 0;
-    cumulativeNumber = 0;
+    onScreenNumberString = "0";
+    cumulativeNumber = "0";
+    currentEquation = "";
+    decimalOnScreen = false;
     updateScreenBottom();
     updateScreenTop();
     console.log("Screen cleared!");
@@ -17,32 +26,59 @@ function clear()
 function updateScreenTop()
 {
     let screenTopDOM = document.getElementById("screenTop");
-    screenTopDOM.textContent = cumulativeNumber;
+    screenTopDOM.textContent = parseFloat(cumulativeNumber);
 }
 
 function updateScreenBottom()
 {
     let screenBottomDOM = document.getElementById("screenBottom");
-    screenBottomDOM.textContent = onScreenNumber;
+    screenBottomDOM.textContent = parseFloat(onScreenNumberString);
+
 }
 
 function appendScreenNumber(numberIn)
 {
-    let screenNumberString = onScreenNumber.toString();
-    let appendNumberString = numberIn.toString();
-    let newScreenNumberString = screenNumberString + appendNumberString;
-    console.log(newScreenNumberString);
-
-    onScreenNumber = parseFloat(newScreenNumberString);
+    if(onScreenNumberString.length < 15)
+    {
+        let appendNumberString = numberIn.toString();
+        let newScreenNumberString = onScreenNumberString + appendNumberString;
+        console.log(newScreenNumberString);
+        onScreenNumberString = newScreenNumberString;
+    }
+    else console.log("Number limit reached!");
 }
 
-function populateButtons()
+
+function populateOperandButtons()
+{
+
+}
+
+
+function addDecimal()
+{
+    if(!decimalOnScreen)
+    {   
+        decimalOnScreen = true;
+        onScreenNumberString += ".";
+
+        console.log("Decimal added!");
+    }
+    else
+    {
+        console.log("Decimal already on-screen!");
+    }
+
+    updateScreenBottom();
+
+}
+
+function populateNumberButtons()
 {
 // FUNCTION creates 0-9 buttons, formats them into a CSS grid, and sets up
 // callback functions for e.g. clicking to display the number on our screen
 
-    // Get the button area from DOM and fill it with our buttons
-    let buttonAreaDOM = document.getElementById("buttonarea");
+    // Fill the "buttonarea" DIV with our buttons
     let i = 1, currentRow = 1, currentColumn = 1;
     while(true)
     {
@@ -62,7 +98,10 @@ function populateButtons()
         // Click adds/appends each number to the screen
         newButton.addEventListener ("click", function() { 
             console.log(this.name);
-            if(onScreenNumber == 0) onScreenNumber = this.name;
+            // Catch the decimal case of 0.x
+            if( (onScreenNumberString == 0) && (!decimalOnScreen) ) 
+                onScreenNumberString = this.name;
+
             else appendScreenNumber(this.name);
             
             updateScreenBottom();
@@ -86,20 +125,43 @@ function populateButtons()
     let buttonZeroDOM = document.getElementById("button0");
     buttonZeroDOM.style.gridColumnStart = 2;
     buttonZeroDOM.style.gridColumnEnd = 3;
+}
+
+function populateButtons()
+{
+    
+    buttonAreaDOM = document.getElementById("buttonarea");
+    populateNumberButtons();
 
 
-    // TODO: Create operand and clear buttons
+    // Clear button to the right of '0' button
     let clearButton = document.createElement("button");
     clearButton.id = "clearButton";
     clearButton.textContent = "C";
            
-    clearButton.style.gridColumnStart = 25;
-    clearButton.style.gridColumnEnd = 26;
-    clearButton.style.gridRowStart = 1;
-    clearButton.style.gridRowEnd = 2;
+    clearButton.style.gridColumnStart = 3;
+    clearButton.style.gridColumnEnd = 4;
+    clearButton.style.gridRowStart = 4;
+    clearButton.style.gridRowEnd = 5;
     clearButton.classList.add("calculatorButton")
     clearButton.addEventListener("click", function(){ clear(); } );
 
-
     buttonAreaDOM.appendChild(clearButton);
+
+    // Decimal point '.' button to the left of '0' button
+    let decimalButton = document.createElement("button");
+    decimalButton.id = "decimalButton";
+    decimalButton.textContent = ".";
+           
+    decimalButton.style.gridColumnStart = 1;
+    decimalButton.style.gridColumnEnd = 2;
+    decimalButton.style.gridRowStart = 4;
+    decimalButton.style.gridRowEnd = 5;
+    decimalButton.classList.add("calculatorButton")
+    decimalButton.addEventListener("click", function(){ addDecimal(); } );
+
+    buttonAreaDOM.appendChild(decimalButton);
+
+    // Create & position operand buttons w/click event listener
+    populateOperandButtons();
 }
