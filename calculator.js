@@ -1,11 +1,39 @@
+let onScreenNumber = 0, cumulativeNumber = 0;
+
 function init()
 {
 
 }
 
-function reset()
+function clear()
 {
+    onScreenNumber = 0;
+    cumulativeNumber = 0;
+    updateScreenBottom();
+    updateScreenTop();
+    console.log("Screen cleared!");
+}
 
+function updateScreenTop()
+{
+    let screenTopDOM = document.getElementById("screenTop");
+    screenTopDOM.textContent = cumulativeNumber;
+}
+
+function updateScreenBottom()
+{
+    let screenBottomDOM = document.getElementById("screenBottom");
+    screenBottomDOM.textContent = onScreenNumber;
+}
+
+function appendScreenNumber(numberIn)
+{
+    let screenNumberString = onScreenNumber.toString();
+    let appendNumberString = numberIn.toString();
+    let newScreenNumberString = screenNumberString + appendNumberString;
+    console.log(newScreenNumberString);
+
+    onScreenNumber = parseFloat(newScreenNumberString);
 }
 
 function populateButtons()
@@ -22,6 +50,7 @@ function populateButtons()
         // Create each new button from 1-9 and put them into a CSS grid
         let newButton = document.createElement("button");
         newButton.id = "button" + i;
+        newButton.name = i;
         newButton.classList.add("calculatorButton")
         newButton.textContent = i;
         
@@ -29,6 +58,15 @@ function populateButtons()
         newButton.style.gridColumnEnd = currentColumn + 1;
         newButton.style.gridRowStart = currentRow;
         newButton.style.gridRowEnd = currentRow + 1;
+
+        // Click adds/appends each number to the screen
+        newButton.addEventListener ("click", function() { 
+            console.log(this.name);
+            if(onScreenNumber == 0) onScreenNumber = this.name;
+            else appendScreenNumber(this.name);
+            
+            updateScreenBottom();
+        } );
 
         currentColumn++;
         if(currentColumn == 4)
@@ -51,4 +89,17 @@ function populateButtons()
 
 
     // TODO: Create operand and clear buttons
+    let clearButton = document.createElement("button");
+    clearButton.id = "clearButton";
+    clearButton.textContent = "C";
+           
+    clearButton.style.gridColumnStart = 25;
+    clearButton.style.gridColumnEnd = 26;
+    clearButton.style.gridRowStart = 1;
+    clearButton.style.gridRowEnd = 2;
+    clearButton.classList.add("calculatorButton")
+    clearButton.addEventListener("click", function(){ clear(); } );
+
+
+    buttonAreaDOM.appendChild(clearButton);
 }
