@@ -1,23 +1,27 @@
-// JAVASCRIPT CALCULATOR
-// ---------------------
+/* JAVASCRIPT CALCULATOR
+   ---------------------*/
 
-// TODO: Add operand buttons and calculation logic
-// ( +, -, *, /, = )
+/* TODO: Add operand buttons and calculation logic
+  ( +, -, *, /, = )
+  A function along the lines of 'previousNumber OPERAND onScreenNumber
+  (Except for equals of course)*/
 
-let onScreenNumberString = "0", cumulativeNumber = "0"; currentEquation= "";
-let buttonAreaDOM = 0; let decimalOnScreen = false;
-
-function init()
-{
-
-}
+let onScreenNumberString = "0", cumulativeNumberString = "0"; 
+    previousNumberString = "0", firstOperand = 0;
+    buttonAreaDOM = 0, decimalOnScreen = false, firstNumber = false;
+    waitingForSecondOperand = false, equalsPressed = false;
 
 function clear()
 {
     onScreenNumberString = "0";
-    cumulativeNumber = "0";
+    cumulativeNumberString = "0";
+    previousNumberString = "0";
     currentEquation = "";
     decimalOnScreen = false;
+    firstNumber = true;
+    firstOperand = 0;
+    waitingForSecondOperand = false;
+    equalsPressed = false;
     updateScreenBottom();
     updateScreenTop();
     console.log("Screen cleared!");
@@ -26,7 +30,7 @@ function clear()
 function updateScreenTop()
 {
     let screenTopDOM = document.getElementById("screenTop");
-    screenTopDOM.textContent = parseFloat(cumulativeNumber);
+    screenTopDOM.textContent = parseFloat(cumulativeNumberString);
 }
 
 function updateScreenBottom()
@@ -45,13 +49,174 @@ function appendScreenNumber(numberIn)
         console.log(newScreenNumberString);
         onScreenNumberString = newScreenNumberString;
     }
-    else console.log("Number limit reached!");
+    else 
+    { 
+        console.log("Number limit reached!\n");
+        console.log(onScreenNumberString + "\n");
+        console.log("Number length is: " + onScreenNumberString.length);
+    }
 }
 
 
 function populateOperandButtons()
 {
+    let operandArray = ['+', '-', '*', '/'];
+    let i = 0, newOperandButton = 0;
 
+    while(i < 4)
+    {
+        newOperandButton = document.createElement("button");
+        newOperandButton.textContent = operandArray[i];
+        newOperandButton.classList.add("calculatorButton");
+
+        newOperandButton.style.gridRowStart = i + 1;
+        newOperandButton.style.gridRowEnd = i + 2;
+        newOperandButton.style.gridColumnStart = 15;
+        newOperandButton.style.gridColumnEnd = 16;
+
+        newOperandButton.style.width = "50px";
+        newOperandButton.style.height = "50px";
+
+        newOperandButton.addEventListener ("click", function() { 
+            console.log(this.textContent + " clicked!");
+            processOperator(this.textContent);
+        });
+
+        buttonAreaDOM.appendChild(newOperandButton);
+        i++;
+    }
+
+    // Equals button 
+    let equalsButton = document.createElement("button");
+    equalsButton.textContent = "=";
+    equalsButton.classList.add("calculatorButton");
+
+    equalsButton.style.gridRowStart = 6;
+    equalsButton.style.gridRowEnd = 7;
+    equalsButton.style.gridColumnStart = 15;
+    equalsButton.style.gridColumnEnd = 16;
+
+    equalsButton.style.width = "75px";
+    equalsButton.style.height = "25px";
+    equalsButton.style.fontSize = "25px";
+    equalsButton.style.lineHeight = "1px";
+
+    equalsButton.addEventListener ("click", function() { 
+        console.log(this.textContent + " clicked!");
+        processOperator(this.textContent);
+    });
+
+    buttonAreaDOM.appendChild(equalsButton);
+    
+}
+
+function calculate(firstOP, OR, secondOP)
+{
+    switch (OR)
+    {
+        case "+": return firstOP + secondOP; break;
+        case "-": return firstOP - secondOP; break;
+        case "*": return firstOP * secondOP; break;
+        case "/": return firstOP / secondOP; break;
+    }
+}
+
+function processOperator(operatorIn)
+{
+
+    let cumulativeNumber = parseFloat(cumulativeNumberString);
+    //let previousNumber = parseFloat(previousNumberString);
+    let onScreenNumber = parseFloat(onScreenNumberString);
+
+    switch (operatorIn)
+    {
+        case "+": 
+            if(!waitingForSecondOperand)
+            {
+                firstOperator = "+";
+                firstOperand = onScreenNumber;
+                waitingForSecondOperand = true;
+                cumulativeNumber = onScreenNumber;
+            }
+            else
+            {
+                cumulativeNumber = calculate(firstOperand,firstOperator,onScreenNumber);
+                firstOperand = cumulativeNumber;
+                firstOperator = "+";
+            }
+        break;
+
+        case "-": 
+            if(!waitingForSecondOperand)
+            {
+                firstOperator = "-";
+                firstOperand = onScreenNumber;
+                waitingForSecondOperand = true;
+                previousNumber = onScreenNumber;
+            }
+            else
+            {
+                cumulativeNumber = calculate(firstOperand,firstOperator,onScreenNumber);
+                firstOperand = cumulativeNumber;
+                firstOperator = "-";
+            }
+        break;
+
+        case "*":
+            if(!waitingForSecondOperand)
+            {
+                firstOperator = "*";
+                firstOperand = onScreenNumber;
+                waitingForSecondOperand = true;
+                previousNumber = onScreenNumber;
+            }
+            else
+            {
+                cumulativeNumber = calculate(firstOperand,firstOperator,onScreenNumber);
+                firstOperand = cumulativeNumber;
+                firstOperator = "*";
+            } 
+        break;
+
+        case "/": 
+            if(!waitingForSecondOperand)
+            {
+                firstOperator = "/";
+                firstOperand = onScreenNumber;
+                waitingForSecondOperand = true;
+                previousNumber = onScreenNumber;
+            }
+            else
+            {
+                cumulativeNumber = calculate(firstOperand,firstOperator,onScreenNumber);
+                firstOperand = cumulativeNumber;
+                firstOperator = "/";
+            }
+        break;
+
+        case "=":
+            cumulativeNumber = calculate(firstOperand, firstOperator, onScreenNumber);
+            onScreenNumber = cumulativeNumber;
+            equalsPressed = true;
+            waitingForSecondOperand = false;
+        break;
+        
+        default: break;
+    }
+
+    cumulativeNumberString = cumulativeNumber.toString();
+    
+    if(!equalsPressed) onScreenNumberString = "0";
+
+    else 
+    {
+        cumulativeNumberString = "0";
+        onScreenNumberString = onScreenNumber.toString();
+        equalsPressed = false;
+    }
+    
+    updateScreenBottom();
+    updateScreenTop();
 }
 
 
@@ -131,6 +296,7 @@ function populateButtons()
 {
     
     buttonAreaDOM = document.getElementById("buttonarea");
+
     populateNumberButtons();
 
 
@@ -162,6 +328,5 @@ function populateButtons()
 
     buttonAreaDOM.appendChild(decimalButton);
 
-    // Create & position operand buttons w/click event listener
     populateOperandButtons();
 }
