@@ -1,10 +1,9 @@
 /* JAVASCRIPT CALCULATOR
    ---------------------*/
 
-/* TODO: Add operand buttons and calculation logic
-  ( +, -, *, /, = )
-  A function along the lines of 'previousNumber OPERAND onScreenNumber
-  (Except for equals of course)*/
+/* TODO: BODMAS-following calculations
+         Keyboard support
+          Bug-fixing (eg pressing equals too early)*/
 
 let onScreenNumberString = "0", cumulativeNumberString = "0"; 
     previousNumberString = "0", firstOperand = 0;
